@@ -11,7 +11,6 @@ import shlex, subprocess
 from utils import SketchLoader
 from model_skipconn import Model
 #from model import Model
-#from sample_func import sample
 
 import threading
 import smtplib
@@ -133,7 +132,6 @@ def sample_from_models_email_report(modelfolder, targetfile, mail_subject):
         (stdoutdata, stderrdata) = popen.communicate()
         return stdoutdata, stderrdata
     
-    #'''
     command = 'python sample.py --sample_length 600 --filename {} --scale_factor 60.0 --num_picture 30 --dataset_name {} --temperature 0.001 --picture_size 120 --num_col 6 --stroke_width 3'.format(targetfile, modelfolder)
     stdoutdata, stderrdata = subprocess_open(command)
     print(stdoutdata)
@@ -144,13 +142,6 @@ def sample_from_models_email_report(modelfolder, targetfile, mail_subject):
         else:
             sys.stdout.write('.')
             time.sleep(1)
-    '''
-    th = threading.Thread(target=sample, args=(targetfile, 600, 120, 60.0, 30, 6, modelfolder, 1, 3.0, 0.001))
-    #sample(sample_length=600, filename=targetfile, scale_factor=60.0, num_picture=30, dataset_name=modelfolder,
-    #       temperature=0.001, picture_size=120, num_col=6, stroke_width=3.0)
-    th.start()
-    th.join()
-    #'''
         
     return email_report(mail_subject, targetfile+'.svg')    
 
