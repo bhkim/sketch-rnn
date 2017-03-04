@@ -11,7 +11,7 @@ import shlex, subprocess
 from utils import SketchLoader
 from model_skipconn import Model
 #from model import Model
-from sample_func import sample
+#from sample_func import sample
 
 import threading
 import smtplib
@@ -67,10 +67,18 @@ def main():
 # aux functions
 
 def email_report(mail_subject, fileToSend=None):
+
+    sender_email = 'abc@abc.net' 
+    receiver_email = 'abc@abc.net'
+    smtp_server = 'smtp.abc.net'
+    smtp_port = 465
+    sender_id = myid
+    sender_pw = mypw
+    
     # send reports via e-mail
     msg = MIMEMultipart()
-    msg['From'] = 'gasioro@hanmail.net'
-    msg['To'] = 'gasioro@hanmail.net'
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
     msg['Subject'] = mail_subject
     msg.preamble = mail_subject
     
@@ -104,10 +112,10 @@ def email_report(mail_subject, fileToSend=None):
             attachment.add_header("Content-Disposition", "attachment", filename=fileToSend)
             msg.attach(attachment)
     
-    s = smtplib.SMTP_SSL('smtp.daum.net',465)
-    s.login("gasioro", "wldudalswl!!")
+    s = smtplib.SMTP_SSL(smtp_server,smtp_port)
+    s.login(myid, mypw)
     try:
-        s.sendmail('gasioro@hanmail.net', 'gasioro@hanmail.net', msg.as_string())
+        s.sendmail(sender_email, receiver_email, msg.as_string())
     except:
         pass
     s.quit()
