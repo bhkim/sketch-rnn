@@ -551,21 +551,22 @@ class MultiRNNCellWithAdditionalConn(core_rnn_cell.RNNCell):    # from tensorflo
                         cur_state = array_ops.slice(
                                 state, [0, cur_state_pos], [-1, cell.state_size])
                         cur_state_pos += cell.state_size
-                        
-                    # Add skip connection from the input of current time t.
-                    if i != 0:
-                        first_layer_input = first_layer_input
-                    else:
-                        first_layer_input = tf.zeros_like(first_layer_input)
-                    
-                    # input-to-state skip connection is added for each hidden layer
-                    if self._add_skip_conn:
+                                            
+                    if self._add_skip_conn:  # input-to-state skip connection is added for each hidden layer
+                        if i != 0:
+                            first_layer_input = first_layer_input
+                        else:
+                            first_layer_input = tf.zeros_like(first_layer_input)
+
                         cell_out, new_state = cell(tf.concat([cur_inp, first_layer_input], 1), cur_state)
                     else:
                         cell_out, new_state = cell(cur_inp, cur_state)
-                        
+                                         
                     if self._add_resid_conn:    
-                        cur_inp = cur_inp + cell_out   # F(x) = x + residual 
+                        if i != 0:
+                            cur_inp = cur_inp + cell_out   # F(x) = x + residual 
+                        else:    
+                            cur_inp = cell_out
                     else:    
                         cur_inp = cell_out
                         
